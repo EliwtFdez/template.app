@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import ValidateForm from '../../helpers/validationform';
 
 @Component({
   selector: 'app-login',
@@ -51,23 +52,9 @@ export class LoginComponent implements OnInit {
       {
         //trhow error
         console.log("Form is not valid");        
-        this.validateAllFormFileds(this.loginForm);
-        alert("Your Form is invalid");
+        ValidateForm.validateAllFormFields(this.loginForm); //{7}      
+         alert("Your Form is invalid");
       }
   }
-
-  private validateAllFormFileds(formGroup : FormGroup)
-  {
-    Object.keys(formGroup.controls).forEach(field =>{
-      const control = formGroup.get(field);
-      if (control instanceof FormControl) {
-        control.markAsDirty({ onlySelf: true });
-      } else if (control instanceof FormGroup) {
-        this.validateAllFormFileds(control);
-      }
-    }); 
-
-  }
-
 
 }

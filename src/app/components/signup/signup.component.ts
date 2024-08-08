@@ -1,35 +1,40 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Form, FormGroup, Validators } from '@angular/forms';
+import { Component,OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import ValidateForm from '../../helpers/validationform';
+
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   imports: [ CommonModule,
-             RouterModule
+             RouterModule,
+             CommonModule,
+             FormsModule,
+             ReactiveFormsModule 
            ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
 
-export class SignupComponent {
+export class SignupComponent implements OnInit{
   // -- variables
   type: string ="password"; 
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash";
-  singUpForm!: FormGroup;
+  signUpForm!: FormGroup;
   
-  constructor(private fb: FormGroup) {}
+  constructor(private fb: FormBuilder) {}
  
   ngOnInit() : void
   {
-    this.singUpForm = this.fb.group({
-      firstName = ['', Validators.required],
-      firstName = ['', Validators.required],
-      firstName = ['', Validators.required],
-      firstName = ['', Validators.required],
-      firstName = ['', Validators.required],
+    this.signUpForm = this.fb.group({
+      firstName : ['', Validators.required],
+      lastName  : ['', Validators.required],
+      userName  : ['', Validators.required],
+      email     : ['', Validators.required],
+      password  : ['', Validators.required],
       // modificar esto
       
     })
@@ -42,7 +47,16 @@ export class SignupComponent {
    this.isText? this.type = "text" : this.type = "password"
  }
 
-
-
+  onSingUp(){
+    if (this.signUpForm.valid) {
+      // -- perform logic for singup
+      console.log(this.signUpForm.value);
+      
+    } else
+    {
+      // -- logic for throwing erro
+      ValidateForm.validateAllFormFields(this.signUpForm); //{7}
+    }
+  }
 
 }
