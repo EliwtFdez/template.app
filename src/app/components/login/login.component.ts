@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -46,15 +46,28 @@ export class LoginComponent implements OnInit {
     {
       //send obj to database
       console.log(this.loginForm.value);
-      
-      
     } 
       else 
       {
         //trhow error
-        console.log("Form is not valid");
-        
-
+        console.log("Form is not valid");        
+        this.validateAllFormFileds(this.loginForm);
+        alert("Your Form is invalid");
       }
   }
+
+  private validateAllFormFileds(formGroup : FormGroup)
+  {
+    Object.keys(formGroup.controls).forEach(field =>{
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsDirty({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFileds(control);
+      }
+    }); 
+
+  }
+
+
 }
