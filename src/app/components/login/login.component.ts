@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import ValidateForm from '../../helpers/validationform';
 import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-login',
@@ -25,8 +26,9 @@ export class LoginComponent implements OnInit {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash";
   loginForm!: FormGroup;
+  private = inject(NgToastService); //inject the service
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}  
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router,private toast:NgToastService) {}  
 
   ngOnInit() 
   {  
@@ -53,11 +55,15 @@ export class LoginComponent implements OnInit {
       this.auth.login(this.loginForm.value).subscribe(
         (res) => { 
           alert(res.message);
+          this.toast.success("Login successful!","SUCCESS", 5000 ); // Simple string message
           this.loginForm.reset();
           this.router.navigate(['home'])
         },
         (error) => {
-          alert(error?.error.message);
+          alert("");
+          this.toast.warning("Something went wrong!","WARNING", 50000000); // Simple string message
+          console.log(error);
+          
         }
       );
     } 
