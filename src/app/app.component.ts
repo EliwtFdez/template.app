@@ -4,6 +4,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { SignupComponent } from './components/signup/signup.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
             RouterOutlet,
             LoginComponent,
             SignupComponent,
-            ReactiveFormsModule
+            ReactiveFormsModule,
+            HttpClientModule
           ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

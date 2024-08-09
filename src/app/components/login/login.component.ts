@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import ValidateForm from '../../helpers/validationform';
+import { AuthService } from '../../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,8 @@ import ValidateForm from '../../helpers/validationform';
     CommonModule,
     RouterModule,
     FormsModule,
-    ReactiveFormsModule  
+    ReactiveFormsModule,
+    HttpClientModule  
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']  
@@ -23,7 +26,7 @@ export class LoginComponent implements OnInit {
   eyeIcon: string = "fa-eye-slash";
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}  
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}  
 
   ngOnInit() 
   {  
@@ -41,12 +44,22 @@ export class LoginComponent implements OnInit {
     this.isText ? this.type = "text" : this.type = "password";
   }
 
-  onSubmit()
+  onLogin()
   {
     if (this.loginForm.valid) 
     {
-      //send obj to database
+     // Send the form data to the server
       console.log(this.loginForm.value);
+      this.auth.login(this.loginForm.value).subscribe(
+        (res) => { 
+          alert(res.message);
+          this.loginForm.reset();
+          this.router.navigate(['home'])
+        },
+        (error) => {
+          alert(error?.error.message);
+        }
+      );
     } 
       else 
       {
