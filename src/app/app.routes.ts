@@ -7,12 +7,10 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { NgToastModule } from 'ng-angular-popup' // to be added
-
 
 export const routes: Routes = [
     {
-        path: '', redirectTo: '/login', pathMatch: 'full'
+        path: '', redirectTo: '/home', pathMatch: 'full'
     },
     {
         path:'login', component: LoginComponent
@@ -37,6 +35,7 @@ export const routes: Routes = [
 
     exports: [RouterModule,
               ReactiveFormsModule,
+
              ]
  })
  
