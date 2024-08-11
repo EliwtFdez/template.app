@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import ValidateForm from '../../helpers/validationform';
 import { AuthService } from '../../services/auth.service';
-import { HttpClientModule } from '@angular/common/http';
 import { NgToastService } from 'ng-angular-popup';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,24 @@ import { NgToastService } from 'ng-angular-popup';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule  
+  ],
+  animations: [
+    trigger('showHide', [
+      state('show', style({
+        opacity: 1,
+        display: 'block'
+      })),
+      state('hide', style({
+        opacity: 0,
+        display: 'none'
+      })),
+      transition('show => hide', [
+        animate('0.5s')
+      ]),
+      transition('hide => show', [
+        animate('0.5s')
+      ]),
+    ]),
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']  
@@ -26,16 +44,15 @@ export class LoginComponent implements OnInit {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash";
   loginForm!: FormGroup;
-  private = inject(NgToastService); //inject the service
+  private toastService = inject(NgToastService); //inject the service
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router,private toast:NgToastService) {}  
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}  
 
   ngOnInit() 
   {  
-  this.loginForm = this.fb.group({
-      // Define your form controls here
-      username: ['',Validators.required],
-      password: ['',Validators.required]
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
   
@@ -46,34 +63,23 @@ export class LoginComponent implements OnInit {
     this.isText ? this.type = "text" : this.type = "password";
   }
 
-  onLogin()
-  {
-    if (this.loginForm.valid) 
-    {
-     // Send the form data to the server
+  onLogin() {
+    if (this.loginForm.valid) {
       console.log(this.loginForm.value);
       this.auth.login(this.loginForm.value).subscribe(
         (res) => { 
-          alert(res.message);
-          this.toast.success("Login successful!","SUCCESS", 5000 ); // Simple string message
+          this.toastService.success({ detail: "SUCCESS", summary: "Login successful!", duration: 5000});
           this.loginForm.reset();
-          this.router.navigate(['home'])
+          this.router.navigate(['home']);
         },
         (error) => {
-          alert("");
-          this.toast.warning("Something went wrong!","WARNING", 50000000); // Simple string message
-          console.log(error);
-          
+          this.toastService.warning({ detail: "WARNING", summary: "Something went wrong!", duration: 5000});        
         }
       );
-    } 
-      else 
-      {
-        //trhow error
-        console.log("Form is not valid");        
-        ValidateForm.validateAllFormFields(this.loginForm); //{7}      
-         alert("Your Form is invalid");
-      }
-  }
-
+    } else {
+      console.log("Form is not valid");        
+      ValidateForm.validateAllFormFields(this.loginForm);      
+      this.toastService.error({ detail: "ERROR", summary: "Your form is not valid",duration: 5000 });    
+    }
+  }  
 }

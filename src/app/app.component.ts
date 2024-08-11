@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgToastModule } from 'ng-angular-popup'; // Correct import for the toast module
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -19,9 +18,10 @@ import { NgToastModule } from 'ng-angular-popup'; // Correct import for the toas
     ReactiveFormsModule,
     HttpClientModule,
     NgToastModule,
+    
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'] // Corrected from 'styleUrl' to 'styleUrls'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'element.118.app';

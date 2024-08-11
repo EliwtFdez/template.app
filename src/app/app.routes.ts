@@ -33,13 +33,10 @@ export const routes: Routes = [
               ReactiveFormsModule,
               BrowserModule,
               HttpClientModule,
-               
               ],
 
     exports: [RouterModule,
               ReactiveFormsModule,
-              NgToastModule,
-
              ]
  })
  

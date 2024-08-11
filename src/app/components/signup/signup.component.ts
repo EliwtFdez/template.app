@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import ValidateForm from '../../helpers/validationform';
 import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { NgToastService } from 'ng-angular-popup';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-signup',
@@ -12,9 +14,26 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [ 
     CommonModule,
     RouterModule,
-    FormsModule,
+    FormsModule ,
     ReactiveFormsModule,
     HttpClientModule,
+  ],  animations: [
+    trigger('showHide', [
+      state('show', style({
+        opacity: 1,
+        display: 'block'
+      })),
+      state('hide', style({
+        opacity: 0,
+        display: 'none'
+      })),
+      transition('show => hide', [
+        animate('0.5s')
+      ]),
+      transition('hide => show', [
+        animate('0.5s')
+      ]),
+    ]),
   ],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
@@ -25,6 +44,7 @@ export class SignupComponent implements OnInit {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash";
   signUpForm!: FormGroup;
+  private toastService = inject(NgToastService); //inject the service
 
   constructor(
     private fb: FormBuilder, 
